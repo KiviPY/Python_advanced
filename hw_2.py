@@ -26,7 +26,7 @@ User: Должен содержать следующие поля:
 Проверка, что если пользователь указывает, что он занят (is_employed = true), его возраст должен быть от 18 до 65 лет.
 
 """
-from pydantic import BaseModel, Field, field_validator, EmailStr, model_validator, root_validator
+from pydantic import BaseModel, Field, field_validator, EmailStr, model_validator
 
 
 json_input_1 = {
@@ -87,12 +87,14 @@ class Address(BaseModel):
 
 class User(BaseModel):
     name: str = Field(min_length=2)
-    age: int = Field(ge=1)
+    age: int = Field(ge=1, lt=120)
     email: EmailStr
     is_employed: bool  # смотря для чего делается, можно добавить Field(default=False)
     address: Address
 
+
     @field_validator('name')
+    @classmethod
     def name_validator(cls, value):
         if not value.replace(" ", "").isalpha():
             raise ValueError("The name should contain only the letters.")
@@ -108,13 +110,13 @@ class User(BaseModel):
 user_1 = User(**json_input_1)
 print(user_1)
 
-user_2 = User(**json_input_2)
-print(user_2)
+# user_2 = User(**json_input_2)
+# print(user_2)
+#
+# user_3 = User(**json_input_3)
+# print(user_3)
 
-user_3 = User(**json_input_3)
-print(user_3)
-
-user_4 = User(**json_input_4)
-print(user_4)
-
+# user_4 = User(**json_input_4)
+# print(user_4)
+#
 
