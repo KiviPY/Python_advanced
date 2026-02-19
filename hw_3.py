@@ -20,12 +20,15 @@ from sqlalchemy import create_engine, Integer, String, Numeric, Boolean, Foreign
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column, relationship
 from decimal import Decimal
 
+from config import SQLALCHEMY_DATABASE_URL
+
 engine = create_engine(
-    "mysql+mysqlconnector://ich1:ich1_password_ilovedbs@ich-edit.edu.itcareerhub.de/sql_alchemy_test",  # user, pass, база
+    SQLALCHEMY_DATABASE_URL,
     echo=True,
-    pool_size=5,    # постоянные соединения
-    max_overflow=10 # временные при пике
+    pool_size=5,
+    max_overflow=10
 )
+
 
 class Base(DeclarativeBase):
     __abstract__ = True
