@@ -63,7 +63,7 @@ with (Session() as session):
     categories_dict = {category.name: category for category in session.execute(select(Category)).scalars()} # делает {"Электроника": Category.id=1, "Книги": Category.id=2, "Одежда": Category.id=3>}
     for data in products_data:
         category = categories_dict[data["category_name"]]
-        # data["category_name"] → "Электроника". categories_dict["Электроника"] Получаем: Category.id=1 name="Электроника"
+        # data["category_name"] -> "Электроника". categories_dict["Электроника"] Получаем: Category.id=1 name="Электроника"
 
         product = Product(name=data["name"],
                           price=Decimal(data["price"]),
