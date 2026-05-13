@@ -1,10 +1,9 @@
 """=======================SERIALIZERS======================="""
-from asyncio import Task
+
 from datetime import timezone, datetime
 
-from rest_framework import serializers, viewsets, status
-from my_app.models import SubTask, Category
-from rest_framework.decorators import api_view
+from rest_framework import serializers, status
+from my_app.models import SubTask, Category, Task
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -48,7 +47,7 @@ class TaskDetailSerializer(serializers.ModelSerializer):
     subtasks = SubTaskSerializer(many=True, read_only=True)
     class Meta:
         model = Task
-        fields = ['name', 'description', 'status', 'deu_date', 'created_at', 'subtasks']
+        fields = ['name', 'description', 'status', 'due_date', 'created_at', 'subtasks']
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):
