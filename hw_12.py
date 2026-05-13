@@ -30,13 +30,11 @@ def get_all_tasks(request: Request) -> Response:
 
 @api_view(['POST'])
 def create_task(request: Request) -> Response:
-    try:
-        serializer = TaskCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-    except Exception as e:
-        return Response(data={'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    serializer = TaskCreateSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET'])
 def get_task_by_id(request: Request, pk: int) -> Response:
