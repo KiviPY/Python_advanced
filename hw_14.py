@@ -20,13 +20,13 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ['name', 'description', 'status', 'due_date', 'created_at', 'subtasks']
 
 WEEKDAY_MAP = {
-    "monday": 1,
-    "tuesday": 2,
-    "wednesday": 3,
-    "thursday": 4,
-    "friday": 5,
-    "saturday": 6,
-    "sunday": 7,
+    "sunday": 1,
+    "monday": 2,
+    "tuesday": 3,
+    "wednesday": 4,
+    "thursday": 5,
+    "friday": 6,
+    "saturday": 7,
 }
 
 class TaskListView1(APIView):
@@ -38,16 +38,6 @@ class TaskListView1(APIView):
             if weekday_number is None:
                 return Response({"error": "Not correct weekday"}, status=status.HTTP_400_BAD_REQUEST)
             tasks = tasks.filter(due_date__week_day=weekday_number)
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
-
-
-class TaskListView2(APIView):
-    def get(self, request):
-        weekday = request.query_params.get('weekday')
-        tasks = Task.objects.all()
-        if weekday:
-            tasks = tasks.filter(weekday__iexact=weekday)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
