@@ -1,11 +1,12 @@
+from datetime import datetime, timezone
+
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from rest_framework import filters, serializers
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from my_app.models import Task, SubTask
 from django.urls import path
 
-from hw_13 import SubTaskSerializer
-from hw_14 import TaskSerializer
+from hw_13 import SubTaskCreateSerializer, SubTaskSerializer
 
 """Задание 1: Замена представлений для задач (Tasks) на Generic Views
 Шаги для выполнения:
@@ -29,6 +30,18 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
     ]
 }
+
+class TaskSerializer(serializers.ModelSerializer):
+    subtasks = SubTaskSerializer(many=True, read_only=True)
+    class Meta:
+        model = Task
+        fields = '__all__'
+        read_only_fields = ['created_at', 'created_by', 'deleted_at']
+
+        def validate_deadline(self, value):
+            if value < datetime.now(timezone.utc):
+                raise serializers.ValidationError('Deadline date cannot be in the past')
+            return value
 
 
 class BaseAPIView:
@@ -68,21 +81,15 @@ urlpatterns = [
 
 class SubTaskListCreateAPIView(BaseAPIView, ListCreateAPIView):
     queryset = SubTask.objects.all()
-    serializer_class = SubTaskSerializer
+    serializer_class = SubTaskCreateSerializer
 
 
 class SubTaskRetrieveUpdateDestroyAPIView(BaseAPIView, RetrieveUpdateDestroyAPIView):
     queryset = SubTask.objects.all()
-    serializer_class = SubTaskSerializer
+    serializer_class = SubTaskCreateSerializer
 
 
 urlpatterns += [
     path("subtasks/", SubTaskListCreateAPIView.as_view()),
     path("subtasks/<int:pk>/", SubTaskRetrieveUpdateDestroyAPIView.as_view())
 ]
-
-
-"""
-Оформление ответа:
-Предоставьте решение: Прикрепите ссылку на гит.
-Скриншоты тестирования: Приложите скриншоты из браузера или Postman, подтверждающие успешное создание, обновление, получение и удаление данных через API."""
